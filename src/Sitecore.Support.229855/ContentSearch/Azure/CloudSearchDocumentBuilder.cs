@@ -37,7 +37,7 @@ namespace Sitecore.Support.ContentSearch.Azure
       }
     }
 
-    protected virtual void AddField(string fieldName, object fieldValue, CloudSearchFieldConfiguration cloudConfiguration, bool append = false)
+    protected override void AddField(string fieldName, object fieldValue, CloudSearchFieldConfiguration cloudConfiguration, bool append = false)
     {
       if (cloudConfiguration != null && cloudConfiguration.Ignore)
       {
@@ -72,12 +72,7 @@ namespace Sitecore.Support.ContentSearch.Azure
       var schemaBuilder = cloudIndex.SchemaBuilder as Sitecore.Support.ContentSearch.Azure.Schema.CloudSearchIndexSchemaBuilder;
 
       // Add field to schema before formatting 
-      BindingFlags bindFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic
-        | BindingFlags.Static;
-      FieldInfo field = typeof(Sitecore.ContentSearch.Azure.CloudSearchDocumentBuilder).GetField("culture", bindFlags);
-      var cultureValue = field.GetValue(this) as CultureInfo;
-
-      var buildedField = schemaBuilder.BuildField(fieldName, fieldValue, cloudConfiguration, cultureValue);
+      var buildedField = schemaBuilder.BuildField(fieldName, fieldValue, cloudConfiguration, this.culture);
 
       if (!string.IsNullOrEmpty(buildedField?.Analyzer) && cloudConfiguration?.CloudAnalyzer == "language")
       {
@@ -113,6 +108,12 @@ namespace Sitecore.Support.ContentSearch.Azure
             if (!fieldIsEmpty && existingValue is string && formattedValue is string)
             {
               return string.Concat(existingValue, " ", formattedValue);
+            }
+            else if (formattedValue is string[] && existingValue is string[] && String.Equals(cloudName, "sxacontent"))
+            {
+              var resultingArray = (existingValue as string[]).Union(formattedValue as string[]).ToArray();
+              CrawlingLog.Log.Info("Support.Debug.510741: union result: " + String.Join(",", resultingArray));
+              return resultingArray;
             }
 
             CrawlingLog.Log.Debug($"[Index={this.Index.Name}] The '{cloudName}' field is skipped: the field already exists in the document and its value is not a string.");
