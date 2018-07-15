@@ -25,10 +25,23 @@ namespace Sitecore.Support.ContentSearch.Azure
     {
       if (fieldValue is IEnumerable && fieldValue.GetType().IsGenericType)
       {
-        foreach (var field in fieldValue as IEnumerable)
+        //fix
+        if (String.Equals(computedIndexField.FieldName, "sxacontent"))
         {
-          this.AddField(computedIndexField.FieldName, field);
+          foreach (var field in fieldValue as IEnumerable)
+          {
+            this.AddField(computedIndexField.FieldName, field, true);
+          }
+
         }
+        else
+        {
+          foreach (var field in fieldValue as IEnumerable)
+          {
+            this.AddField(computedIndexField.FieldName, field);
+          }
+        }
+        //end fix
       }
       else
       {
@@ -108,12 +121,13 @@ namespace Sitecore.Support.ContentSearch.Azure
             {
               return string.Concat(existingValue, " ", formattedValue);
             }
+            //fix
             else if (formattedValue is string[] && existingValue is string[] && String.Equals(cloudName, "sxacontent"))
             {
               var resultingArray = (existingValue as string[]).Union(formattedValue as string[]).ToArray();
-              CrawlingLog.Log.Info("Support.Debug.510741: union result: " + String.Join(",", resultingArray));
               return resultingArray;
             }
+            //end fix
 
             CrawlingLog.Log.Debug($"[Index={this.Index.Name}] The '{cloudName}' field is skipped: the field already exists in the document and its value is not a string.");
             return existingValue;
