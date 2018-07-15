@@ -1,4 +1,4 @@
-namespace Sitecore.Support.ContentSearch.Azure.Schema
+namespace Sitecore.ContentSearch.Azure.Schema
 {
     using System;
     using System.Collections.Concurrent;

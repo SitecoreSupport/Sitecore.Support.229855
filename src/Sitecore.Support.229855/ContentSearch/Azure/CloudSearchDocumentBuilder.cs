@@ -2,7 +2,6 @@
 using Sitecore.ContentSearch.Azure.Schema;
 using Sitecore.ContentSearch.ComputedFields;
 using Sitecore.ContentSearch.Diagnostics;
-using Sitecore.Support.ContentSearch.Azure.Schema;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -69,7 +68,7 @@ namespace Sitecore.Support.ContentSearch.Azure
       this.AddField(cloudName, fieldValue, cloudConfiguration, append, fieldIsEmpty);
 
       var cloudIndex = this.Index as CloudSearchProviderIndex;
-      var schemaBuilder = cloudIndex.SchemaBuilder as Sitecore.Support.ContentSearch.Azure.Schema.CloudSearchIndexSchemaBuilder;
+      var schemaBuilder = cloudIndex.SchemaBuilder as CloudSearchIndexSchemaBuilder;
 
       // Add field to schema before formatting 
       var buildedField = schemaBuilder.BuildField(fieldName, fieldValue, cloudConfiguration, this.culture);
@@ -90,7 +89,7 @@ namespace Sitecore.Support.ContentSearch.Azure
       }
 
       var cloudIndex = this.Index as CloudSearchProviderIndex;
-      var schemaBuilder = cloudIndex.SchemaBuilder as Sitecore.Support.ContentSearch.Azure.Schema.CloudSearchIndexSchemaBuilder;
+      var schemaBuilder = cloudIndex.SchemaBuilder as CloudSearchIndexSchemaBuilder;
 
       // Add field to schema before formatting 
       schemaBuilder.AddField(cloudName, fieldValue, cloudConfiguration, this.culture);
