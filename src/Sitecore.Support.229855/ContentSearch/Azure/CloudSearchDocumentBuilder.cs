@@ -1,4 +1,5 @@
 ﻿using Sitecore.ContentSearch.Azure;
+using Sitecore.ContentSearch.Azure.Models;
 using Sitecore.ContentSearch.Azure.Schema;
 using Sitecore.ContentSearch.ComputedFields;
 using Sitecore.ContentSearch.Diagnostics;
@@ -81,12 +82,11 @@ namespace Sitecore.Support.ContentSearch.Azure
       this.AddField(cloudName, fieldValue, cloudConfiguration, append, fieldIsEmpty);
 
       var cloudIndex = this.Index as CloudSearchProviderIndex;
-      var schemaBuilder = cloudIndex.SchemaBuilder as CloudSearchIndexSchemaBuilder;
 
-      // Add field to schema before formatting 
-      var buildedField = schemaBuilder.BuildField(fieldName, fieldValue, cloudConfiguration, this.culture);
+      var buildedField = cloudIndex.SchemaBuilder.GetType().InvokeMember("BuildField", BindingFlags.InvokeMethod,
+   Type.DefaultBinder, cloudIndex.SchemaBuilder, new object[] { fieldName, fieldValue, cloudConfiguration, this.culture });
 
-      if (!string.IsNullOrEmpty(buildedField?.Analyzer) && cloudConfiguration?.CloudAnalyzer == "language")
+      if (!string.IsNullOrEmpty(((IndexedField)buildedField)?.Analyzer) && cloudConfiguration?.CloudAnalyzer == "language")
       {
         cloudName = (this.Index.FieldNameTranslator as CloudFieldNameTranslator).GetIndexFieldName(fieldName, cloudFieldType, this.culture);
 
@@ -102,10 +102,10 @@ namespace Sitecore.Support.ContentSearch.Azure
       }
 
       var cloudIndex = this.Index as CloudSearchProviderIndex;
-      var schemaBuilder = cloudIndex.SchemaBuilder as CloudSearchIndexSchemaBuilder;
 
-      // Add field to schema before formatting 
-      schemaBuilder.AddField(cloudName, fieldValue, cloudConfiguration, this.culture);
+      cloudIndex.SchemaBuilder.GetType().InvokeMember("AddField", BindingFlags.InvokeMethod,
+   Type.DefaultBinder, cloudIndex.SchemaBuilder, new object[] { cloudName, fieldValue, cloudConfiguration, this.culture });
+
 
       var formattedValue = this.Index.Configuration.IndexFieldStorageValueFormatter.FormatValueForIndexStorage(fieldValue, cloudName);
       if (formattedValue == null)

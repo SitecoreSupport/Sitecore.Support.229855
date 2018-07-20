@@ -22,12 +22,13 @@
     <UseGlobalApplicationHostFile />
     <TargetFrameworkProfile />
     <LangVersion>6</LangVersion>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
+    <OutputPath>..\..\..\..\..\Sitecore\sc901_3.sc\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -68,8 +69,6 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContentSearch\Azure\Schema\CloudSearchIndexSchema.cs" />
-    <Compile Include="ContentSearch\Azure\Schema\CloudSearchIndexSchemaBuilder.cs" />
     <Compile Include="ContentSearch\Azure\CloudSearchDocumentBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
